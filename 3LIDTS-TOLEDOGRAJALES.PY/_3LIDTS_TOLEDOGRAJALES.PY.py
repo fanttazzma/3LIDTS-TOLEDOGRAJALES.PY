@@ -1,72 +1,68 @@
 import tkinter as tk
 from tkinter import messagebox
+
 def calcular_temps():
-    if(tbCelsius.get() or tbFahrenheit.get() or tbKelvin.get()):
-        try:
-            print("Calculando temperatura")
-            if(tbCelsius.get()):
-                print("Calculando desde Celsius")
-                ce = float(tbCelsius.get())
-                fa = (ce * 9/5) + 32
-                tbFahrenheit.delete(0,tk.END)
-                tbFahrenheit.insert(0, str(round(fa,2)))
-                ke = ce + 273.15
-                tbKelvin.delete(0,tk.END)
-                tbKelvin.insert(0, str(round(ke,2)))
-            elif(tbFahrenheit.get()):
-                print("Calculando desde Fahrenheit")
-                fa = float(tbFahrenheit.get())
-                ce = (fa - 32) * 5/9
-                tbCelsius.delete(0,tk.END)
-                tbCelsius.insert(0, str(round(ce,2)))
-                ke = ce + 273.15
-                tbKelvin.delete(0,tk.END)
-                tbKelvin.insert(0, str(round(ke,2)))
-            elif(tbKelvin.get()):
-                print("Calculando desde Kelvin")
-                ke = float(tbKelvin.get())
-                ce = ke - 273.15
-                tbCelsius.delete(0,tk.END)
-                tbCelsius.insert(0, str(round(ce,2)))
-                fa = (ce * 9/5) + 32
-                tbFahrenheit.delete(0,tk.END)
-                tbFahrenheit.insert(0, str(round(fa,2)))
-        except ValueError:
-            messagebox.showerror(title="Error", message="Tipo de dato ingresado incompatible")
-    else:
-        messagebox.showwarning(title="advertencia", message="Los contenedores estan vacios")
+    try:
+        # Si hay valor en Celsius
+        if var_celcius.get() != "":
+            ce = float(var_celcius.get())
+            fa = (ce * 9/5) + 32
+            ke = ce + 273.15
+            var_fahrenheit.set(round(fa, 2))
+            var_kelvin.set(round(ke, 2))
+
+        # Si hay valor en Fahrenheit
+        elif var_fahrenheit.get() != "":
+            fa = float(var_fahrenheit.get())
+            ce = (fa - 32) * 5/9
+            ke = ce + 273.15
+            var_celcius.set(round(ce, 2))
+            var_kelvin.set(round(ke, 2))
+
+        # Si hay valor en Kelvin
+        elif var_kelvin.get() != "":
+            ke = float(var_kelvin.get())
+            ce = ke - 273.15
+            fa = (ce * 9/5) + 32
+            var_celcius.set(round(ce, 2))
+            var_fahrenheit.set(round(fa, 2))
+
+        else:
+            messagebox.showwarning("Advertencia", "Debes ingresar un valor en al menos un campo.")
+
+    except ValueError:
+        messagebox.showerror("Error", "Por favor, ingrese solo numeros validos.")
+
 def limpiar():
-    #print("Limpiando")
-    tbCelsius.delete(0,tk.END)
-    tbFahrenheit.delete(0,tk.END)
-    tbKelvin.delete(0,tk.END)
-    messagebox.showinfo(title="Limpiando", message="Se estan borrando los valores")
-#Crear ventana principal
+    var_celcius.set("")
+    var_fahrenheit.set("")
+    var_kelvin.set("")
+    messagebox.showinfo("Limpiando", "Se han borrado los valores.")
+
+# Ventana principal
 ventana = tk.Tk()
-ventana.title("Conversor basico de Temperaturas")
-#Etiquetas
-#tk.Label(ventana, text ="Celsius:").grid(row=0, column=0, padx=10, pady=10)
-lbCelsius = tk.Label(ventana, text ="Celsius:")
-lbCelsius.grid(row=0, column=0, padx=10, pady=10)
-#tk.Lable(ventana, text="Fahrenheit:").grid(row=1, column=0, padx=10, pady=10))
-lbFahrenheit = tk.Label(ventana, text="Fahrenheit:")
-lbFahrenheit.grid(row=1, column=0, padx=10, pady=10)
-#tk.Label(ventana, text="Kelvin:").grid(row=2, column=0, padx=10, pady=10)
-lbKelvin = tk.Label(ventana, text="Kelvin:")
-lbKelvin.grid(row=2, column=0, padx=10, pady=10)
-#Entradas
-tbCelsius = tk.Entry(ventana)
-tbFahrenheit = tk.Entry(ventana)
-tbKelvin = tk.Entry(ventana)
-tbCelsius.grid(row=0, column=1, padx=10, pady=10)
-tbFahrenheit.grid(row=1, column=1, padx=10, pady=10)
-tbKelvin.grid(row=2, column=1, padx=10, pady=10)
-#Botones
-btnCalcular = tk.Button(ventana, text="Calcular",command=calcular_temps)
-btnLimpiar = tk.Button(ventana, text="Limpiar",command=limpiar)
-btnCalcular.grid(row=3, column=0, columnspan=2, pady=10)
-btnLimpiar.grid(row=4, column=0, padx=10, pady=10)
-btnSalir = tk.Button(ventana, text="Salir", command=ventana.quit)
-btnSalir.grid(row=4, column=1, padx=10, pady=10)
-#Ejecucion de la ventana
-ventana.mainloop()
+ventana.title("Conversor de Temperatura")
+ventana.geometry("350x250")
+ventana.config(bg="#f0f0f0")
+
+# Variables de texto
+var_celcius = tk.StringVar()
+var_fahrenheit = tk.StringVar()
+var_kelvin = tk.StringVar()
+
+# Etiquetas
+tk.Label(ventana, text="Celsius:", bg="#f0f0f0", font=("Arial", 11)).grid(row=0, column=0, padx=10, pady=10, sticky="e")
+tk.Label(ventana, text="Fahrenheit:", bg="#f0f0f0", font=("Arial", 11)).grid(row=1, column=0, padx=10, pady=10, sticky="e")
+tk.Label(ventana, text="Kelvin:", bg="#f0f0f0", font=("Arial", 11)).grid(row=2, column=0, padx=10, pady=10, sticky="e")
+
+# Entradas
+tk.Entry(ventana, textvariable=var_celcius).grid(row=0, column=1, padx=10, pady=10)
+tk.Entry(ventana, textvariable=var_fahrenheit).grid(row=1, column=1, padx=10, pady=10)
+tk.Entry(ventana, textvariable=var_kelvin).grid(row=2, column=1, padx=10, pady=10)
+
+# Botones
+tk.Button(ventana, text="Calcular", width=12, bg="#4caf50", fg="white", command=calcular_temps).grid(row=3, column=0, columnspan=2, pady=10)
+tk.Button(ventana, text="Limpiar", width=12, bg="#f44336", fg="white", command=limpiar).grid(row=4, column=0, padx=10, pady=10)
+tk.Button(ventana, text="Salir", width=12, bg="#2196f3", fg="white", command=ventana.quit).grid(row=4, column=1, padx=10, pady=10)
+
+ventana.mainloop()  
